@@ -5,6 +5,7 @@
   "main": "src/sentry.ts",
   "scripts": {
     "sentry": "nodemon src/sentry.ts",
+    "deploy": "ts-node src/deploy.ts",
     "tsc": "tsc"
   },
   "repository": {
@@ -24,7 +25,16 @@
   "homepage": "https://github.com/m1ten/sentry#readme",
   "devDependencies": {
     "@types/node": "^17.0.10",
+    "eslint": "^8.7.0",
     "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.11.0",
+    "@discordjs/rest": "^0.2.0-canary.0",
+    "discord-api-types": "^0.26.1",
+    "discord.js": "^13.6.0",
+    "dotenv": "^14.2.0"
   }
 }
