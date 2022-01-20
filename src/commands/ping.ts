@@ -8,5 +8,9 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: any) {
   const ephemeral = interaction.options.getBoolean("ephemeral");
-  return interaction.reply({ content: "Pong!", ephemeral: ephemeral });
+
+  let latency = "\nLatency: "  + (Date.now() - interaction.createdTimestamp) + " ms";
+  let apiLatency = "\nAPI Latency: " + Math.round(interaction.client.ws.ping) + " ms";
+
+  return interaction.reply({ content: "Pong!" + latency + apiLatency, ephemeral: ephemeral });
 }
