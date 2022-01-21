@@ -4,13 +4,26 @@ export const data = new SlashCommandBuilder()
   .setName("unixtime")
   .setDescription("Replies Unix Time!")
   .addStringOption((option) =>
-	option.setName("unit").setDescription("unit of time; ms, s, m, h, d, mo, y, de").setRequired(true))
+    option
+      .setName("unit")
+      .setDescription("unit of time; ms, s, m, h, d, mo, y, de")
+      .setRequired(true)
+      .addChoice("ms", "ms")
+      .addChoice("s", "s")
+      .addChoice("m", "m")
+      .addChoice("h", "h")
+      .addChoice("d", "d")
+      .addChoice("mo", "mo")
+      .addChoice("y", "y")
+      .addChoice("de", "de")
+  )
   .addBooleanOption((option) =>
-    option.setName("ephemeral").setDescription("Show or hide message"));
+    option.setName("ephemeral").setDescription("Show or hide message")
+  );
 
 export async function execute(interaction: any) {
   const ephemeral = interaction.options.getBoolean("ephemeral");
-  const time = interaction.options.getString("time");
+  const unit = interaction.options.get("unit").value;
 
   // get unix time
   const unixTime = Math.floor(Date.now() / 1000);
@@ -36,24 +49,51 @@ export async function execute(interaction: any) {
   // unix time in decades
   const unixTimeDecades = Math.floor(unixTime / 315400000);
 
-  switch (time) {
-	case "ms":
-		return interaction.reply({ content: `${unixTimeMilliseconds} milliseconds`, ephemeral: ephemeral });
-	case "s":
-		return interaction.reply({ content: `${unixTime} seconds`, ephemeral: ephemeral });
-	case "m":
-		return interaction.reply({ content: `${unixTimeMinutes} minutes`, ephemeral: ephemeral });
-	case "h":
-		return interaction.reply({ content: `${unixTimeHours} hours`, ephemeral: ephemeral });
-	case "d":
-		return interaction.reply({ content: `${unixTimeDays} days`, ephemeral: ephemeral });
-	case "mo":
-		return interaction.reply({ content: `${unixTimeMonths} months`, ephemeral: ephemeral });
-	case "y":
-		return interaction.reply({ content: `${unixTimeYears} years`, ephemeral: ephemeral });
-	case "de":
-		return interaction.reply({ content: `${unixTimeDecades} decades`, ephemeral: ephemeral });
-	default:
-		return interaction.reply({ content: `${unixTime} seconds`, ephemeral: ephemeral });
+  switch (unit) {
+    case "ms":
+      return interaction.reply({
+        content: `${unixTimeMilliseconds} milliseconds`,
+        ephemeral: ephemeral,
+      });
+    case "s":
+      return interaction.reply({
+        content: `${unixTime} seconds`,
+        ephemeral: ephemeral,
+      });
+    case "m":
+      return interaction.reply({
+        content: `${unixTimeMinutes} minutes`,
+        ephemeral: ephemeral,
+      });
+    case "h":
+      return interaction.reply({
+        content: `${unixTimeHours} hours`,
+        ephemeral: ephemeral,
+      });
+    case "d":
+      return interaction.reply({
+        content: `${unixTimeDays} days`,
+        ephemeral: ephemeral,
+      });
+    case "mo":
+      return interaction.reply({
+        content: `${unixTimeMonths} months`,
+        ephemeral: ephemeral,
+      });
+    case "y":
+      return interaction.reply({
+        content: `${unixTimeYears} years`,
+        ephemeral: ephemeral,
+      });
+    case "de":
+      return interaction.reply({
+        content: `${unixTimeDecades} decades`,
+        ephemeral: ephemeral,
+      });
+    default:
+      return interaction.reply({
+        content: `${unixTime} seconds`,
+        ephemeral: ephemeral,
+      });
   }
 }
