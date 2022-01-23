@@ -1,6 +1,4 @@
 // import dependencies
-import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v9";
 import { Client, Collection, Intents } from "discord.js";
 import { readdirSync } from "fs";
 
@@ -46,34 +44,6 @@ for (const file of commandFiles) {
 
   commands.push(command.data.toJSON());
 }
-
-// create a new REST client
-const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
-
-(async () => {
-  // try refreshing application commands
-  try {
-    console.log("Started refreshing application slash commands.");
-
-    // refresh application commands
-    await rest.put(
-      // global slash commands
-      // Routes.applicationCommand(process.env.CLIENTID)
-
-      // guild slash commands
-      Routes.applicationGuildCommands(
-        process.env.CLIENT_ID,
-        process.env.GUILD_ID
-      ),
-      { body: commands }
-    );
-
-    console.log("Successfully reloaded application slash commands.");
-  } catch (error) {
-    // log error to console
-    console.error(error);
-  }
-})();
 
 // when the client is ready, run this code
 const eventFiles = readdirSync(__dirname + "/events").filter((file) =>

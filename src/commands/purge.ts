@@ -25,13 +25,19 @@ export async function execute(interaction: any) {
       amount = 100;
     }
 
-    await interaction.channel.bulkDelete(amount, true);
-
-    return interaction.reply({
-      content: `Successfully purged \`${amount}\` messages.`,
-      ephemeral: ephemeral,
+    await interaction.channel.bulkDelete(amount, true).catch(() => {
+      throw ":warning: I don't have permission to purge messages.";
     });
+
+    await interaction
+      .reply({
+        content: `Successfully purged \`${amount}\` messages.`,
+        ephemeral: ephemeral,
+      })
+      .catch(() => {
+        throw ":warning: An error occurred while replying.";
+      });
   } else {
-    throw 50001;
+    throw ":warning: You don't have permission to purge messages.";
   }
 }

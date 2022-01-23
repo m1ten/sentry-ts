@@ -17,16 +17,25 @@ export async function execute(interaction: any) {
   const ephemeral = interaction.options.getBoolean("ephemeral");
 
   if (user)
-    return interaction.reply({
-      content: `${user.username}'s avatar: ${user.displayAvatarURL({
+    await interaction
+      .reply({
+        content: `${user.username}'s avatar: ${user.displayAvatarURL({
+          dynamic: true,
+        })}`,
+        ephemeral: ephemeral,
+      })
+      .catch(() => {
+        throw ":warning: An error occurred while replying.";
+      });
+
+  await interaction
+    .reply({
+      content: `Your avatar: ${interaction.user.displayAvatarURL({
         dynamic: true,
       })}`,
       ephemeral: ephemeral,
+    })
+    .catch(() => {
+      throw ":warning: An error occurred while replying.";
     });
-  return interaction.reply({
-    content: `Your avatar: ${interaction.user.displayAvatarURL({
-      dynamic: true,
-    })}`,
-    ephemeral: ephemeral,
-  });
 }

@@ -5,7 +5,8 @@
   "main": "src/sentry.ts",
   "scripts": {
     "sentry": "nodemon src/sentry.ts",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "deploy": "nodemon src/deploy.ts"
   },
   "repository": {
     "type": "git",

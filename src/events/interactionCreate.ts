@@ -20,32 +20,22 @@ export async function execute(
   try {
     // execute the command
     await command.execute(interaction);
-  } catch (error) {
-    // check all the error codes
-
-    //@ts-ignore
-    if (error === 50013 || error.code === 50013) {
+  } catch (error: any) {
+    // check if error is a string
+    if (typeof error === "string") {
+      if (error.includes(":warning:")) {
+        return interaction.reply({
+          content: `${error}`,
+          ephemeral: true,
+        });
+      }
+    } else {
+      // log error
+      console.error(error);
       return interaction.reply({
-        content:
-          ":warning: I don't have permission to execute this command!",
+        content: `:warning: There was an error while executing ${interaction.commandName} command.`,
         ephemeral: true,
       });
     }
-
-    //@ts-ignore
-    if (error === 50001 || error.code === 50001) {
-      return interaction.reply({
-        content:
-          ":warning: You don't have permission to execute this command!",
-        ephemeral: true,
-      });
-    }
-
-    console.error(error);
-
-    await interaction.reply({
-      content: ":warning: There was an error while executing this command!",
-      ephemeral: true,
-    });
   }
 }

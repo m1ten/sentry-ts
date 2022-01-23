@@ -46,42 +46,43 @@ export async function execute(interaction: any) {
 
   // check if the user has permissions to manage roles
   if (!mod.permissions.has("MANAGE_ROLES")) {
-    return interaction.reply({
-      content: ":warning: You don't have permission to manage roles.",
-      ephemeral: true,
-    });
+    throw ":warning: You don't have permission to manage roles.";
   }
 
   // check if the role user wants to add or remove is lower than the highest role of the user
   if (mod.roles.highest.comparePositionTo(role) < 0 && status === "add") {
-    return interaction.reply({
-      content:
-        ":warning: You can't add a role that is higher than your highest role.",
-      ephemeral: true,
-    });
+    throw ":warning: You can't add a role that is higher than your highest role.";
   } else if (
     mod.roles.highest.comparePositionTo(role) > 0 &&
     status === "remove"
   ) {
-    return interaction.reply({
-      content:
-        ":warning: You can't remove a role that is higher than your highest role.",
-      ephemeral: true,
-    });
+    throw ":warning: You can't remove a role that is higher than your highest role.";
   }
 
   switch (status) {
     case "add":
-      await member.roles.add(role);
-      return interaction.reply({
-        content: `${user.username} has been given the role ${role.name}`,
-        ephemeral: ephemeral,
+      await member.roles.add(role).catch(() => {
+        throw ":warning: I don't have manage roles permission.";
       });
+      await interaction
+        .reply({
+          content: `${user.username} has been given the role ${role.name}`,
+          ephemeral: ephemeral,
+        })
+        .catch(() => {
+          throw ":warning: An error occurred while replying.";
+        });
     case "remove":
-      await member.roles.remove(role);
-      return interaction.reply({
-        content: `${user.username} has been removed from the role ${role.name}`,
-        ephemeral: ephemeral,
+      await member.roles.remove(role).catch(() => {
+        throw ":warning: I don't have manage roles permission.";
       });
+      await interaction
+        .reply({
+          content: `${user.username} has been removed from the role ${role.name}`,
+          ephemeral: ephemeral,
+        })
+        .catch(() => {
+          throw ":warning: An error occurred while replying.";
+        });
   }
 }

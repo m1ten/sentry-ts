@@ -1,29 +1,15 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { MessageEmbed } from "discord.js";
 
 export const data = new SlashCommandBuilder()
   .setName("unixtime")
   .setDescription("Replies Unix Time!")
-  .addStringOption((option) =>
-    option
-      .setName("unit")
-      .setDescription("unit of time; ms, s, m, h, d, mo, y, de")
-      .setRequired(true)
-      .addChoice("ms", "ms")
-      .addChoice("s", "s")
-      .addChoice("m", "m")
-      .addChoice("h", "h")
-      .addChoice("d", "d")
-      .addChoice("mo", "mo")
-      .addChoice("y", "y")
-      .addChoice("de", "de")
-  )
   .addBooleanOption((option) =>
     option.setName("ephemeral").setDescription("Show or hide message")
   );
 
 export async function execute(interaction: any) {
   const ephemeral = interaction.options.getBoolean("ephemeral");
-  const unit = interaction.options.get("unit").value;
 
   // get unix time
   const unixTime = Math.floor(Date.now() / 1000);
@@ -49,51 +35,62 @@ export async function execute(interaction: any) {
   // unix time in decades
   const unixTimeDecades = Math.floor(unixTime / 315400000);
 
-  switch (unit) {
-    case "ms":
-      return interaction.reply({
-        content: `${unixTimeMilliseconds} milliseconds`,
-        ephemeral: ephemeral,
-      });
-    case "s":
-      return interaction.reply({
-        content: `${unixTime} seconds`,
-        ephemeral: ephemeral,
-      });
-    case "m":
-      return interaction.reply({
-        content: `${unixTimeMinutes} minutes`,
-        ephemeral: ephemeral,
-      });
-    case "h":
-      return interaction.reply({
-        content: `${unixTimeHours} hours`,
-        ephemeral: ephemeral,
-      });
-    case "d":
-      return interaction.reply({
-        content: `${unixTimeDays} days`,
-        ephemeral: ephemeral,
-      });
-    case "mo":
-      return interaction.reply({
-        content: `${unixTimeMonths} months`,
-        ephemeral: ephemeral,
-      });
-    case "y":
-      return interaction.reply({
-        content: `${unixTimeYears} years`,
-        ephemeral: ephemeral,
-      });
-    case "de":
-      return interaction.reply({
-        content: `${unixTimeDecades} decades`,
-        ephemeral: ephemeral,
-      });
-    default:
-      return interaction.reply({
-        content: `${unixTime} seconds`,
-        ephemeral: ephemeral,
-      });
-  }
+  // convert unix time to human date
+  const timeUTC = new Date(unixTime * 1000).toUTCString();
+
+  const embed = new MessageEmbed()
+    .setTitle("unix time")
+    .setColor("NOT_QUITE_BLACK")
+    .addFields(
+      {
+        name: "milliseconds",
+        value: unixTimeMilliseconds.toString(),
+        inline: true,
+      },
+      {
+        name: "seconds",
+        value: unixTime.toString(),
+        inline: true,
+      },
+      {
+        name: "minutes",
+        value: unixTimeMinutes.toString(),
+        inline: true,
+      },
+      {
+        name: "hours",
+        value: unixTimeHours.toString(),
+        inline: true,
+      },
+      {
+        name: "days",
+        value: unixTimeDays.toString(),
+        inline: true,
+      },
+      {
+        name: "months",
+        value: unixTimeMonths.toString(),
+        inline: true,
+      },
+      {
+        name: "years",
+        value: unixTimeYears.toString(),
+        inline: true,
+      },
+      {
+        name: "decades",
+        value: unixTimeDecades.toString(),
+        inline: true,
+      }
+    )
+    .setFooter({
+      text: timeUTC,
+    });
+
+  await interaction.reply({
+    embeds: [embed],
+    ephemeral: ephemeral,
+  }).catch(() => {
+    throw ":warning: An error occurred while replying.";
+  });
 }
