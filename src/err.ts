@@ -1,40 +1,44 @@
+// this is mainly for logging in the future
+
 export class Err {
     public error: any | null = null;
     public custom: string | null = null;
-    public time: Date = new Date();
+    readonly time: Date = new Date();
 
-    public name: string | null = null; // name of command
-    public userId: number | null = null; // id of user who used the command
+    // name of command
+    public name: string | null = null;
+
+    // id of user who used the command
+    public userId: number | null = null;
 
     public output: string | null = null;
-    public check_err: () => Err;
+    public checkErr: () => Err;
 
-    public constructor(error: any | null, custom: string | null, name: string | null, userId: number | null) {
+    public constructor(
+        error: any | null,
+        custom: string | null,
+        name: string | null,
+        userId: number | null,
+    ) {
         this.error = error;
         this.custom = custom;
         this.name = name;
         this.userId = userId;
 
-        this.check_err = function (): Err {
-            console.error(`[${this.time.toUTCString()}]\nCommand: ${this.name}\nUser: ${this.userId}\nError: ${this.error.message}\nCustom: ${this.custom}`);
-
-            if (error.custom) {
-                this.output = error.custom;
-
-                return this;
+        this.checkErr = function(): Err {
+            if (this.custom && this.custom.length > 0) {
+                this.output = this.custom;
+            }
+            else if (error.message && error.message.length > 0) {
+                this.output = this.error.message;
+            }
+            else {
+                this.output = 'An unknown error has occurred.';
             }
 
-            switch (this.error.message) {
-                case "Missing Permissions":
-                    this.output = `Missing permission to use \`${name}\`.`;
-                    break;
-                case "Invalid Command":
-                    this.output = `Invalid command: \`${name}\`.`;
-                    break;
-            }
+            console.error(`Time: [${this.time.toUTCString()}]\nCommand: ${this.name}\nUser: ${this.userId}\nError: ${this.error.message}\nCustom: ${this.custom}\nOutput: ${this.output}`);
 
             return this;
-        }
+        };
     }
 }
-
