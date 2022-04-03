@@ -29,4 +29,4 @@ yet another multi-purpose discord bot
 
 ## License
 
-sentry is licensed under [Apache-2.0].
+sentry is licensed under [Apache-2.0](./LICENSE).
