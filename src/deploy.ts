@@ -1,24 +1,27 @@
 import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v9";
+import { Routes } from "discord-api-types/v10";
 import fs from "fs";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 export function deploy() {
-  const commands = [];
+  const commands: any[] = [];
+
   const commandFiles = fs
-    .readdirSync(__dirname + "/commands")
-    .filter((file) => file.endsWith(".ts"));
+    .readdirSync(__dirname + "/cmds");
+
+  // filter out non-ts and non-js files
+  commandFiles.forEach((file) => {
+    if (file.endsWith(".ts") || file.endsWith(".js")) {
+      const { data } = require(`./cmds/${file}`);
+      commands.push(data.toJSON());
+    }
+  });
 
   console.log(commandFiles);
 
-  for (const file of commandFiles) {
-    const { data } = require(`./commands/${file}`);
-    commands.push(data.toJSON());
-  }
-
-  const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
+  const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
   (async () => {
     try {

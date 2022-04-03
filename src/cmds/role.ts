@@ -38,7 +38,7 @@ export async function execute(interaction: any) {
   //   return;
   // }
 
-  // get member of the excuter of the command
+  // get member of the executer of the command
   const mod = interaction.guild.members.cache.get(interaction.member.id);
 
   // get member from user
@@ -46,43 +46,43 @@ export async function execute(interaction: any) {
 
   // check if the user has permissions to manage roles
   if (!mod.permissions.has("MANAGE_ROLES")) {
-    throw ":warning: You don't have permission to manage roles.";
+    throw new Error("MISSING_PERM = MANAGE_ROLES");
   }
 
   // check if the role user wants to add or remove is lower than the highest role of the user
   if (mod.roles.highest.comparePositionTo(role) < 0 && status === "add") {
-    throw ":warning: You can't add a role that is higher than your highest role.";
+    throw new Error("CUSTOM: :warning: | You can't add a role that is higher than your highest role.");
   } else if (
     mod.roles.highest.comparePositionTo(role) > 0 &&
     status === "remove"
   ) {
-    throw ":warning: You can't remove a role that is higher than your highest role.";
+    throw new Error("CUSTOM: :warning: | You can't remove a role that is higher than your highest role.");
   }
 
   switch (status) {
     case "add":
       await member.roles.add(role).catch(() => {
-        throw ":warning: I don't have manage roles permission.";
+        throw new Error("MISSING_BOT_PERM = MANAGE_ROLES");
       });
       await interaction
         .reply({
-          content: `${user.username} has been given the role ${role.name}`,
+          content: `${user.username} has been given the role \`${role.name}\`.`,
           ephemeral: ephemeral,
         })
         .catch(() => {
-          throw ":warning: An error occurred while replying.";
+          throw new Error("REPLY_ERR");
         });
     case "remove":
       await member.roles.remove(role).catch(() => {
-        throw ":warning: I don't have manage roles permission.";
+        throw new Error("MISSING_BOT_PERM = MANAGE_ROLES");
       });
       await interaction
         .reply({
-          content: `${user.username} has been removed from the role ${role.name}`,
+          content: `${user.username} has been removed from the role \`${role.name}\`.`,
           ephemeral: ephemeral,
         })
         .catch(() => {
-          throw ":warning: An error occurred while replying.";
+          throw new Error("REPLY_ERR");
         });
   }
 }
