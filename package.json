@@ -1,42 +1,45 @@
 {
-  "name": "sentry",
-  "version": "0.1.0",
-  "description": "yet another discord bot",
-  "main": "src/sentry.ts",
-  "scripts": {
-    "sentry": "nodemon src/sentry.ts",
-    "tsc": "tsc",
-    "deploy": "nodemon src/deploy.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/m1ten/sentry.git"
-  },
-  "keywords": [
-    "discord",
-    "bot",
-    "ts"
-  ],
-  "author": "miten",
-  "license": "Zlib",
-  "bugs": {
-    "url": "https://github.com/m1ten/sentry/issues"
-  },
-  "homepage": "https://github.com/m1ten/sentry#readme",
-  "devDependencies": {
-    "@types/node": "^17.0.10",
-    "eslint": "^8.7.0",
-    "nodemon": "^2.0.15",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.4"
-  },
-  "dependencies": {
-    "@discordjs/builders": "^0.11.0",
-    "@discordjs/rest": "^0.2.0-canary.0",
-    "discord-api-types": "^0.26.1",
-    "discord.js": "^13.6.0",
-    "dotenv": "^14.2.0",
-    "mathjs": "^10.1.0",
-    "node-fetch": "^2.6.7"
-  }
+    "name": "sentry",
+    "version": "0.1.0",
+    "description": "yet another discord bot",
+    "main": "src/sentry.js",
+    "scripts": {
+        "sentry": "nodemon src/sentry.js --exec ts-node --watch src --ext ts,js",
+        "tsc": "tsc",
+        "deploy": "ts-node src/deploy.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/m1ten/sentry.git"
+    },
+    "keywords": [
+        "discord",
+        "bot",
+        "ts"
+    ],
+    "author": "miten",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/m1ten/sentry/issues"
+    },
+    "homepage": "https://github.com/m1ten/sentry#readme",
+    "devDependencies": {
+        "@types/node": "^17.0.23",
+        "@typescript-eslint/eslint-plugin": "^5.17.0",
+        "@typescript-eslint/parser": "^5.17.0",
+        "eslint": "^8.12.0",
+        "nodemon": "^2.0.15",
+        "ts-node": "^10.7.0",
+        "typescript": "^4.6.3"
+    },
+    "dependencies": {
+        "@discordjs/builders": "^0.12.0",
+        "@discordjs/rest": "^0.3.0",
+        "discord-api-types": "^0.30.0",
+        "discord.js": "^13.6.0",
+        "dotenv": "^16.0.0",
+        "mathjs": "^10.4.2",
+        "node-fetch": "^3.2.3"
+    },
+    "bin": "src/sentry.js"
 }

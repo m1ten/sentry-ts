@@ -1,41 +1,42 @@
-export const name = "interactionCreate";
+import { Err } from '../err';
 
-export async function execute(
-  interaction: {
-    isCommand: () => any;
-    commandName: any;
-    reply: (arg0: { content: string; ephemeral: boolean }) => any;
-  },
-  sentry: { commands: { get: (arg0: any) => any } }
-) {
-  // check if the interaction is a command
-  if (!interaction.isCommand()) return;
+export const name = 'interactionCreate';
 
-  // get the command
-  const command = sentry.commands.get(interaction.commandName);
+export async function execute(interaction: any, sentry: any): Promise<void> {
+    // check if the interaction is a command
+    if (!interaction.isCommand()) return;
 
-  // return if the command doesn't exist
-  if (!command) return;
+    // get the command
+    const command = sentry.commands.get(interaction.commandName);
 
-  try {
-    // execute the command
-    await command.execute(interaction);
-  } catch (error: any) {
-    // check if error is a string
-    if (typeof error === "string") {
-      if (error.includes(":warning:")) {
-        return interaction.reply({
-          content: `${error}`,
-          ephemeral: true,
-        });
-      }
-    } else {
-      // log error
-      console.error(error);
-      return interaction.reply({
-        content: `:warning: There was an error while executing ${interaction.commandName} command.`,
-        ephemeral: true,
-      });
-    }
-  }
+    // return if the command doesn't exist
+    if (!command) return;
+
+    await command.execute(interaction).catch((err: Err) => {
+        // console.log(err);
+
+        if (!err.name) {
+            err.name = interaction.commandName;
+        }
+
+        if (!err.userId) {
+            err.userId = interaction.member.id;
+        }
+
+        const error = err.checkErr.call(err);
+
+        // console.log(`output: ${error.output}`);
+
+        // try {
+        //   // try replying the error
+        //   await interaction.reply({
+        //     content: newErr.output,
+        //     ephemeral: true
+        //   });
+        // } catch (_) {
+        //   await interaction.editReply(newErr.output);
+        // }
+    });
+
+    return;
 }
